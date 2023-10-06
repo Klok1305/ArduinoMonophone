@@ -1,0 +1,36 @@
+#include <SoftwareSerial.h>
+#include <DFRobotDFPlayerMini.h>
+
+SoftwareSerial mySerial(10, 11); // RX, TX
+DFRobotDFPlayerMini myDFPlayer;
+
+int potPin = A0;   
+int potValue = 0;     
+int lastPotValue = -1; 
+
+void setup()
+{
+  Serial.begin(9600);
+  mySerial.begin(9600);
+  if (!myDFPlayer.begin(mySerial))
+  {
+    Serial.println(F("Увы"));
+    while (true);
+  }
+  myDFPlayer.volume(30);
+}
+
+void loop()
+{
+  potValue = analogRead(potPin);
+
+  int volume = map(potValue, 0, 1023, 0, 30);
+
+  if (volume != lastPotValue)
+  {
+    myDFPlayer.volume(volume);
+    Serial.print(F("Volume: "));
+    Serial.println(volume);
+    lastPotValue = volume;
+  }
+}
