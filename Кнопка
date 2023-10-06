@@ -4,7 +4,7 @@
 SoftwareSerial mySerial(10, 11); // RX, TX
 DFRobotDFPlayerMini myDFPlayer;
 
-int buttonPin = 2; // Pin where the button is connected
+int buttonPin = 2; 
 int buttonState = 0;     
 int lastButtonState = 0; 
 bool isPlaying = false;  
@@ -21,7 +21,7 @@ void setup()
   }
   myDFPlayer.volume(30);
 
-  pinMode(buttonPin, INPUT); // Set the button pin as an input with internal pull-up resistor
+  pinMode(buttonPin, INPUT); 
 }
 
 void loop()
