@@ -1,0 +1,65 @@
+#include <SoftwareSerial.h>
+#include <DFRobotDFPlayerMini.h>
+
+SoftwareSerial mySerial(10, 11); // RX, TX
+DFRobotDFPlayerMini myDFPlayer;
+
+int buttonPin = 2; 
+int potentiometerPin = A0;  
+int buttonState = 0;
+int lastButtonState = 0;
+int potentiometerValue = 0;     // Store potentiometer value
+int lastPotentiometerValue = 0; // Store previous potentiometer value
+bool isPlaying = false;
+
+void setup()
+{
+  Serial.begin(9600);
+  mySerial.begin(9600);
+  if (!myDFPlayer.begin(mySerial))
+  {
+    Serial.println(F("Увы"));
+    while (true);
+  }
+  myDFPlayer.volume(30);
+
+  pinMode(buttonPin, INPUT);
+}
+
+void loop()
+{
+  buttonState = digitalRead(buttonPin);
+  potValue = analogRead(potPin);
+
+  if (buttonState != lastButtonState)
+  {
+    if (buttonState == LOW)
+    {
+      if (isPlaying)
+      {
+        myDFPlayer.stop();
+        Serial.println(F("Стоп аудио"));
+        delay(1000);
+      }
+      else
+      {
+        myDFPlayer.play(1);
+        isPlaying = true;
+        Serial.println(F("Начало аудио"));
+      }
+    }
+    lastButtonState = buttonState;
+  }
+
+  
+
+  int volume = map(potValue, 0, 1023, 0, 30);
+
+  if (volume != lastPotValue)
+  {
+    myDFPlayer.volume(volume);
+    Serial.print(F("Volume: "));
+    Serial.println(volume);
+    lastPotValue = volume;
+  }
+}
