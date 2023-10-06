@@ -1,0 +1,50 @@
+#include <SoftwareSerial.h>
+#include <DFRobotDFPlayerMini.h>
+
+SoftwareSerial mySerial(10, 11); // RX, TX
+DFRobotDFPlayerMini myDFPlayer;
+
+int buttonPin = 2; // Pin where the button is connected
+int buttonState = 0;     
+int lastButtonState = 0; 
+bool isPlaying = false;  
+
+
+void setup()
+{
+  Serial.begin(9600);
+  mySerial.begin(9600);
+  if (!myDFPlayer.begin(mySerial))
+  {
+    Serial.println(F("Увы"));
+    while (true);
+  }
+  myDFPlayer.volume(30);
+
+  pinMode(buttonPin, INPUT); // Set the button pin as an input with internal pull-up resistor
+}
+
+void loop()
+{
+  buttonState = digitalRead(buttonPin);
+
+  if (buttonState != lastButtonState)
+  {
+    if (buttonState == LOW)
+    {
+      if (isPlaying)
+      {
+        myDFPlayer.stop(); 
+        Serial.println(F("Стоп аудио"));
+        delay(1000); 
+      }
+      else
+      {
+        myDFPlayer.play(1); 
+        isPlaying = true; 
+        Serial.println(F("Начало аудио"));
+      }
+    }
+    lastButtonState = buttonState;
+  }
+}
